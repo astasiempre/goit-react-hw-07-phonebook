@@ -6,10 +6,15 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 
 import { addContacts, deleteContacts, setFilter } from 'redux/contactsReducer';
+import { useEffect } from 'react';
 export const App = () => {
   const contacts = useSelector(state => state.contacts.contacts);
   const filter = useSelector(state => state.contacts.filter);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(requestContacts());
+  }, [dispatch]);
 
   const handleAddContact = newContact => {
     const phoneBookHasContact = contacts.some(
