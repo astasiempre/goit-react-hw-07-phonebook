@@ -1,26 +1,31 @@
 
-import { fetchContacts } from "services/contacts";
-// import { useDispatch } from "react-redux";
+import { requestAddContact, requestContacts } from "services/contacts";
 
-// const dispatch = useDispatch();
 const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
 
 
 
-export const requestContacts = createAsyncThunk('contacts/fetchAll', async (data, thunkAPI) => {
+export const fetchContacts = createAsyncThunk('contacts/fetchAll', async (__, thunkAPI) => {
   try {
-    const contactsData = await fetchContacts();
+    const contactsData = await requestContacts();
+    console.log(contactsData)
     return contactsData;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.message);
   }
 })
 
-
+export const addContact = createAsyncThunk('contacts/fetchAll', async (newContact, thunkAPI) => {
+  try {
+    const contact = await requestAddContact(newContact);
+    console.log(contact)
+    return contact;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+})
 
 const INITIAL_STATE = {
-  // contacts: [],
-  // filter: '',
 
   contacts: {
     items: [],
@@ -39,21 +44,21 @@ const contactsSlice = createSlice({
  
   initialState: INITIAL_STATE,
   
-  reducers: {
-      addContacts(state, action) {
-        state.contacts.push(action.payload);
-          
-    },
-      deleteContacts(state, action) {
-        state.contacts = state.contacts.filter(
-          contact => contact.name !== action.payload
-        );
-        
-    },
-      setFilter(state, action) {
-        state.filter = action.payload;
-    },
-  },
+  extraReducers: builder =>
+    builder
+      .addCase(fetchContacts.pending, state => {
+        state.contacts.isLoading = true;
+        state.contacts.error = null;
+      })
+      .addCase(fetchContacts.fulfilled, (state, action) => { 
+        state.contacts.items = action.payload;
+        state.contacts.isLoading = false;
+      })
+      .addCase(fetchContacts.rejected, (state, action) => {
+        state.contacts.isLoading = false;
+        state.contacts.error = action.payload;
+       }),
+ 
 });
 
 

@@ -7,16 +7,25 @@ import { useDispatch } from 'react-redux';
 
 import { addContacts, deleteContacts, setFilter } from 'redux/contactsReducer';
 import { useEffect } from 'react';
+import { fetchContacts } from 'redux/contactsReducer';
+import { selectContacts, selectContactsError, selectContactsFilter, selectContactsIsloading } from 'redux/contactsSelectors';
+import Loader from 'components/Loader/Loader';
+import ErrorMessage from 'components/ErrorMessage/ErrorMessage';
+
 export const App = () => {
-  const contacts = useSelector(state => state.contacts.contacts);
-  const filter = useSelector(state => state.contacts.filter);
+  // const contacts = useSelector(state => state.contacts.contacts.items);
+  const contacts = useSelector(selectContacts);
+  const filter = useSelector(selectContactsFilter);
+  const isLoading = useSelector(selectContactsIsloading);
+  const error = useSelector(selectContactsError);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(requestContacts());
+    dispatch(fetchContacts());
   }, [dispatch]);
 
   const handleAddContact = newContact => {
+    console.log(newContact)
     const phoneBookHasContact = contacts.some(
       contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
     );
@@ -42,6 +51,8 @@ export const App = () => {
       <ContactForm onAddContact={handleAddContact} contacts={contacts} />
       <Title>Contacts</Title>
       <Filter filter={filter} onFilterChange={handleFilterChange} />
+      {isLoading && <Loader />}
+      {error && <ErrorMessage message={error.message} />}
       <ContactList
         contacts={contacts}
         filter={filter}
