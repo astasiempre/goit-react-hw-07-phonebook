@@ -1,7 +1,5 @@
-
 import ContactListItem from './ContactListItem';
 import { List } from './ContactList.styled';
-
 
 const ContactList = ({ contacts, filter, onDeleteContact }) => {
   const filteredContacts = contacts.filter(contact =>
@@ -9,18 +7,17 @@ const ContactList = ({ contacts, filter, onDeleteContact }) => {
   );
 
   return (
-
     <List>
-      
       {filteredContacts.map(contact => (
         <ContactListItem
           key={contact.id}
           contact={contact.name}
-          number={contact.number}
+          phone={contact.phone}
           onDeleteContact={onDeleteContact}
+          id={contact.id}
         />
       ))}
-      </List>
+    </List>
   );
 };
 

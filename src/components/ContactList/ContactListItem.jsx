@@ -2,12 +2,12 @@
 import {ListItem, DeleteButton} from './ContactListItem.styled'
 
 
-const ContactListItem = ({ contact, number, onDeleteContact }) => {
+const ContactListItem = ({id, contact, phone, onDeleteContact }) => {
 
     return (
       <ListItem>
-        {contact}: {number}
-        <DeleteButton onClick={() => onDeleteContact(contact)}>Delete</DeleteButton>
+        {contact}: {phone}
+        <DeleteButton onClick={() => onDeleteContact(id)}>Delete</DeleteButton>
       </ListItem>
     );
   }
